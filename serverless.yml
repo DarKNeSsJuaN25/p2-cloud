@@ -1,43 +1,51 @@
-service: usuarios-service
-frameworkVersion: "3"
+org: laredojuan25
+service: api-usuarios
 
 provider:
   name: aws
-  runtime: python3.11
-  region: us-east-1
+  runtime: python3.12
+  memorySize: 1024
+  timeout: 30
+  iam:
+    role: arn:aws:iam::352677750379:role/LabRole
   environment:
-    USERS_TABLE: usuarios
-    JWT_SECRET: supersecreto123 # Debes cambiarlo en producción
+    TABLE_NAME: ${sls:stage}-t_usuarios
+    JWT_SECRET: supersecreto123  # Cámbialo en producción
 
 functions:
-  crearUsuario:
+  crear:
     handler: handler.crear_usuario
     events:
       - http:
-          path: usuarios
+          path: /usuario/crear
           method: post
+          cors: true
+          integration: lambda
 
   login:
     handler: handler.login
     events:
       - http:
-          path: login
+          path: /usuario/login
           method: post
+          cors: true
+          integration: lambda
 
-  validarToken:
+  validar:
     handler: handler.validar_token
     events:
       - http:
-          path: validar-token
+          path: /usuario/validar
           method: get
+          cors: true
+          integration: lambda
 
 resources:
   Resources:
-    UsuariosTable:
+    TablaUsuarios:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: usuarios
-        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.TABLE_NAME}
         AttributeDefinitions:
           - AttributeName: tenant_id
             AttributeType: S
@@ -48,3 +56,5 @@ resources:
             KeyType: HASH
           - AttributeName: username
             KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+

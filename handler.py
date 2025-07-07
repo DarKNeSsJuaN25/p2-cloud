@@ -7,11 +7,11 @@ import hashlib
 from utils import hash_password, verify_password
 
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table(os.environ['USERS_TABLE'])
+table = dynamodb.Table(os.environ['TABLE_NAME'])
 JWT_SECRET = os.environ['JWT_SECRET']
 
 def crear_usuario(event, context):
-    body = json.loads(event['body'])
+    body = event['body']
 
     tenant_id = body['tenant_id']
     username = body['username']
@@ -33,7 +33,7 @@ def crear_usuario(event, context):
     }
 
 def login(event, context):
-    body = json.loads(event['body'])
+    body = event['body']
 
     tenant_id = body['tenant_id']
     username = body['username']

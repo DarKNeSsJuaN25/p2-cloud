@@ -1,0 +1,29 @@
+# Ignorar carpetas y archivos generados por pip
+boto3/
+botocore/
+dateutil/
+jmespath/
+jwt/
+python_dateutil-*/
+PyJWT-*/
+s3transfer/
+s3transfer-*/
+six.py
+six-*/
+urllib3/
+urllib3-*/
+
+# Ignorar caché de Python
+__pycache__/
+*.pyc
+
+# Ignorar archivos de sistema
+.DS_Store
+
+# Ignorar entorno virtual si existiera
+venv/
+.env/
+
+# Si usas Serverless Framework .serverless se puede ignorar si quieres
+.serverless/
+
