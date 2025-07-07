@@ -1,0 +1,50 @@
+service: usuarios-service
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: python3.11
+  region: us-east-1
+  environment:
+    USERS_TABLE: usuarios
+    JWT_SECRET: supersecreto123 # Debes cambiarlo en producción
+
+functions:
+  crearUsuario:
+    handler: handler.crear_usuario
+    events:
+      - http:
+          path: usuarios
+          method: post
+
+  login:
+    handler: handler.login
+    events:
+      - http:
+          path: login
+          method: post
+
+  validarToken:
+    handler: handler.validar_token
+    events:
+      - http:
+          path: validar-token
+          method: get
+
+resources:
+  Resources:
+    UsuariosTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: usuarios
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: tenant_id
+            AttributeType: S
+          - AttributeName: username
+            AttributeType: S
+        KeySchema:
+          - AttributeName: tenant_id
+            KeyType: HASH
+          - AttributeName: username
+            KeyType: RANGE
