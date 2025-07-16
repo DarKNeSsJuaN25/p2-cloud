@@ -1,0 +1,64 @@
+openapi: 3.0.1
+info:
+  title: API Usuarios - Cursos Virtuales
+  description: Microservicio de Usuarios - Multi-Tenancy con JWT
+  version: "1.0.0"
+
+servers:
+  - url: https://qpiar1r8fe.execute-api.us-east-1.amazonaws.com/dev
+
+paths:
+  /usuario/crear:
+    post:
+      summary: Crear un nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tenant_id:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+              required: [tenant_id, username, password]
+      responses:
+        '200':
+          description: Usuario creado
+
+  /usuario/login:
+    post:
+      summary: Iniciar sesión
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tenant_id:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+              required: [tenant_id, username, password]
+      responses:
+        '200':
+          description: Token JWT generado
+
+  /usuario/validar:
+    get:
+      summary: Validar token JWT
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Token válido
